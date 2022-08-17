@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/vue/2.7.0/vue.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <title>混入</title>
+</head>
+<body>
+    <div class="main-container">
+        <div class="clock-wrapper">
+            {{ clock }}
+        </div>
+    </div>
+    <script>
+        var mixinClock = {
+            data() {
+                return {
+                    clock: '',
+                    interalId: '',
+                }
+            },
+            created() {
+                this.interalId = setInterval(()=>{
+                    this.setClock()
+                }, 1000)
+            },
+            destory() {
+                clearInterval(this.interalId)
+            },
+            methods:{
+                setClock() {
+                    this.clock = this.dateTimeFormatter(new Date())
+                    console.log(this.clock)
+                },
+                dateTimeFormatter(_date) {
+                    let date = new Date(_date);
+
+                    let y = date.getFullYear();
+                    let M  = (date.getMonth()).toString().padStart(2, '0');
+                    let d = (date.getDate()).toString().padStart(2, '0');
+
+                    let h = (date.getHours()).toString().padStart(2, '0');
+                    let m = (date.getMinutes()).toString().padStart(2, '0');
+                    let s = (date.getSeconds()).toString().padStart(2, '0');
+
+                    return `${y}-${M}-${d} ${h}:${m}:${s}`
+                }
+            }
+        }
+    </script>
+    <script>
+        new Vue({
+            el: '.main-container',
+            mixins: [mixinClock],
+        })
+    </script>
+</body>
+</html>

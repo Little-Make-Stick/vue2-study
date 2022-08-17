@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/vue/2.7.0/vue.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <title>插槽</title>
+</head>
+<body>
+    <div class="main-container">
+        <custom-comp title="标题">
+            <template v-slot:wrapper="slotProps">
+                <p>第一行。。。</p>
+                <p>第二行。。。。</p>
+                <p>参数： {{slotProps.props}}</p>
+            </template>
+        </custom-comp>
+    </div>
+
+    <script type="text/x-template" id="custom-comp">
+        <div class="custom-comp-container">
+            <h2>{{title}}</h2>
+            <slot name="wrapper" v-bind:props="props"></slot>
+        </div>
+    </script>
+
+    <script>
+        new Vue({
+            el: '.main-container',
+            data() {
+                return {}
+            },
+            components: {
+                customComp: {
+                    template: '#custom-comp',
+                    props: {
+                        title: {type: String}
+                    },
+                    data() {
+                        return {
+                            props: { name: 'key' }
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

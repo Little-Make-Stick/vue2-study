@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.staticfile.org/vue/2.7.0/vue.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <script src="./custom-directive/directive-console.js"></script>
+    <script src="./custom-directive/throttle.js"></script>
+    <script src="./custom-directive/lazy.js"></script>
+    <script src="./custom-directive/copy.js"></script>
+    <title>自定义指令</title>
+</head>
+
+<body>
+    <div class="main-container">
+        <h1>自定义指令</h1>
+        <ul>使用场景
+            <li>输入防抖</li>
+            <li>图片懒加载</li>
+            <li>一键 Copy的功能</li>
+            <li>拖拽指令</li>
+            <li>页面水印</li>
+            <li>权限校验</li>
+        </ul>
+
+        <el-button @click="sayHello" v-throttle:click>HELLO</el-button>
+        <el-input v-model="inputVal" @change="consoleVal" v-throttle:change></el-input>
+
+        <el-row>一键复制
+            <span v-copy="'RT4C9T'">RT4C9T</span>
+        </el-row>
+
+        <!-- <el-row v-for="i in 10" :key="i"> -->
+            <el-image src="https://v2.cn.vuejs.org/images/logo.svg" v-lazy></el-image>
+        <!-- </el-row> -->
+
+        
+    </div>
+
+    <script>
+        // function copy(binding, el) {
+        //     // 复制
+        //     let transfer = document.createElement('input');//创建控件
+        //     document.body.appendChild(transfer);
+        //     transfer.style.cssText = 'position: absolute;right: 45%;top: 80%;'
+        //     let copyValue = binding.value || el.value || el.innerHTML
+        //     transfer.value = copyValue;  // 这里表示想要复制的内容
+
+        //     transfer.focus();
+        //     transfer.select();
+        //     if (document.execCommand('copy')) {
+        //         document.execCommand('copy');
+        //     }
+        //     transfer.blur();
+        //     // console.log('复制成功');
+        //     document.body.removeChild(transfer);//删除控件
+        //     alert("复制成功: " + copyValue)
+        // }
+
+        new Vue({
+            el: '.main-container',
+            data() {
+                return {
+                    inputVal: '',
+                    inputVal1: "复制内容",
+                    timeOutId: '',
+                }
+            },
+            methods: {
+                sayHello() {
+                    console.log('hello')
+                },
+                consoleVal() {
+                    console.log(this.inputVal)
+                }
+            },
+            directives: {
+                demo: {
+                    /**
+                     * 只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置
+                     */
+                    bind: (el, binding, vnode, oldVnode) => {
+                        bindConsole(el, binding, vnode, oldVnode)
+                    },
+                    /**
+                     * 被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)。
+                     */
+                    inserted: (el, binding, vnode, oldVnode) => {
+                        insertedConsole(el, binding, vnode, oldVnode)
+                    },
+                    /**
+                     * 所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。
+                     */
+                    update: (el, binding, vnode, oldVnode) => {
+                        updateConsole(el, binding, vnode, oldVnode);
+                    },
+                    /**
+                     *  指令所在组件的 VNode 及其子 VNode 全部更新后调用。
+                     */
+                    componentUpdated: (el, binding, vnode, oldVnode) => {
+                        componentUpdatedConsole(el, binding, vnode, oldVnode);
+
+                    },
+                    /**
+                     * 只调用一次，指令与元素解绑时调用。
+                     */
+                    unbind: (el, binding, vnode, oldVnode) => {
+                        unbindConsole(el, binding, vnode, oldVnode);
+                    },
+                },
+                throttle: _throttle,
+                lazy: _lazy,
+                copy: _copy,
+            }
+        })
+    </script>
+</body>
+
+</html>
