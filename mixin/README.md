@@ -16,7 +16,7 @@
                 this.setClock()
             }, 1000)
         },
-        destory() {
+        destroyed() {
             clearInterval(this.interalId)
         },
         methods:{
